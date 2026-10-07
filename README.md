@@ -103,3 +103,37 @@ In order to complete this assignment, you must do the following:
 ### Grading
 
 This assignment will be graded via peer assessment.
+
+## Solution notes
+
+The solution is in `cachematrix.R`:
+
+- `makeCacheMatrix(x)` returns a list with `set`, `get`, `setinverse`, `getinverse`. The matrix `x` and the cached inverse `inv` live in the function's environment and are changed with `<<-`. `set()` clears the cache.
+- `cacheSolve(x, ...)` returns the cached inverse (printing "getting cached data") or computes it with `solve()`, caches it and returns it.
+
+### Sample run
+
+R was not available on the machine used to write this, so the same logic was mirrored in `verify_cachematrix.py` (closure + cached `numpy.linalg.inv`) and run on a 1000x1000 invertible matrix:
+
+```
+getting cached data
+matrix size                : 1000x1000
+first call (computes)      : 0.0809 s
+second call (from cache)   : 0.000046 s
+same object returned       : True
+max |A %*% inv(A) - I|     : 1.665e-15
+inverse[1,1], inverse[2,3] : 0.0010007698, -0.0000004557
+cache after set()          : True
+new inverse correct        : True
+new inverse != old inverse : True
+getting cached data
+```
+
+Equivalent R session:
+
+```r
+source("cachematrix.R")
+m <- makeCacheMatrix(matrix(c(2, 0, 0, 2), 2, 2))
+cacheSolve(m)   # computes
+cacheSolve(m)   # message: getting cached data
+```
